@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive educational simulation of a solar tracking and voltage stabilization system." />
+  <title>Smart Solar Control | Interactive Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">☼</span><span>SMART<span class="brand-light">SOLAR</span></span></a>
+    <nav><a href="#model">System</a><a href="#controls">Controls</a><a href="#results">Results</a><a href="#about">Model notes</a></nav>
+    <span class="top-tag"><i></i> INTERACTIVE LAB</span>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">CONTROL SYSTEMS · WEB SIMULATION</p>
+        <h1>Smart Solar Energy Generation <em>&</em> Voltage Stabilization</h1>
+        <p class="hero-sub">An interactive educational model combining solar panel sun tracking with closed-loop DC output voltage regulation.</p>
+        <div class="hero-actions"><a class="button primary" href="#controls">Configure simulation <span>↘</span></a><button class="button ghost" id="heroRun">▶ Run default case</button></div>
+        <div class="hero-meta"><span>01 / SOLAR TRACKING</span><span>02 / VOLTAGE CONTROL</span><span>03 / BUCK CONVERTER</span></div>
+      </div>
+      <div class="hero-art" aria-label="Illustration of solar panel and sun">
+        <div class="sun-glow"></div><div class="sun-disc"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="panel-illustration"><div class="panel-grid"></div><div class="panel-leg"></div></div>
+        <div class="art-label label-sun">SOLAR IRRADIANCE <b>G(t)</b></div>
+        <div class="art-label label-panel">PV ARRAY <b>Vpv · Ipv</b></div>
+        <div class="art-label label-voltage">REGULATED OUTPUT <b>Vout</b></div>
+      </div>
+    </section>
+
+    <section class="system-strip" id="model">
+      <div class="section-heading"><div><p class="eyebrow">SYSTEM OVERVIEW</p><h2>Two controllers. One integrated system.</h2></div><p class="section-note">Functional representation of the project block diagram.</p></div>
+      <div class="flow-diagram">
+        <div class="flow-node input-node"><span class="node-icon">☀</span><small>REFERENCE</small><b>Sun position</b><strong>θref</strong></div><span class="flow-arrow">→</span>
+        <div class="flow-node controller-node"><span class="node-icon">⌁</span><small>CONTROLLER 01</small><b>Solar tracking</b><strong>Angle control</strong></div><span class="flow-arrow">→</span>
+        <div class="flow-node plant-node"><span class="node-icon">▦</span><small>PLANT 01</small><b>PV panel</b><strong>Solar power</strong></div><span class="flow-arrow">→</span>
+        <div class="flow-node controller-node"><span class="node-icon">ϟ</span><small>CONTROLLER 02</small><b>PI voltage control</b><strong>Vout regulation</strong></div><span class="flow-arrow">→</span>
+        <div class="flow-node output-node"><span class="node-icon">⌁</span><small>OUTPUT</small><b>DC load</b><strong>Stable voltage</strong></div>
+      </div>
+      <p class="diagram-footnote"><span>↗</span> Feedback: panel position sensor closes the tracking loop; output voltage sensor closes the voltage-control loop.</p>
+    </section>
+
+    <section class="workspace" id="controls">
+      <div class="section-heading"><div><p class="eyebrow">SIMULATION WORKSPACE</p><h2>Set the operating conditions</h2></div><div class="live-pill"><i></i> READY TO SIMULATE</div></div>
+      <div class="workspace-grid">
+        <aside class="control-panel">
+          <div class="panel-heading"><div><span class="panel-symbol">⚙</span><div><h3>Simulation controls</h3><p>Adjust inputs and disturbances</p></div></div><button class="text-button" id="resetDefaults">Reset all</button></div>
+          <div class="control-group">
+            <div class="group-title"><span>01</span><b>Solar tracking & environment</b></div>
+            <label class="slider-label" for="duration">Simulation duration <output id="durationVal">30 s</output></label><input id="duration" type="range" min="10" max="60" step="5" value="30">
+            <label class="slider-label" for="irradiance">Solar irradiance <output id="irradianceVal">1000 W/m²</output></label><input id="irradiance" type="range" min="200" max="1100" step="50" value="1000">
+            <div class="two-inputs"><div><label for="sunStart">Sun start angle</label><div class="input-wrap"><input id="sunStart" type="number" min="0" max="90" value="10"><span>°</span></div></div><div><label for="sunEnd">Sun end angle</label><div class="input-wrap"><input id="sunEnd" type="number" min="0" max="90" value="80"><span>°</span></div></div></div>
+            <label class="slider-label" for="cloudTime">Cloud disturbance time <output id="cloudTimeVal">12 s</output></label><input id="cloudTime" type="range" min="0" max="60" step="1" value="12">
+            <label class="slider-label" for="cloudDrop">Irradiance reduction <output id="cloudDropVal">35%</output></label><input id="cloudDrop" type="range" min="0" max="90" step="5" value="35">
+          </div>
+          <div class="control-group">
+            <div class="group-title"><span>02</span><b>Voltage regulation & load</b></div>
+            <label class="slider-label" for="vref">Voltage reference <output id="vrefVal">12 V</output></label><input id="vref" type="range" min="5" max="16" step="0.5" value="12">
+            <div class="two-inputs"><div><label for="loadBefore">Initial load</label><div class="input-wrap"><input id="loadBefore" type="number" min="1" max="20" step="0.5" value="3"><span>Ω</span></div></div><div><label for="loadAfter">Changed load</label><div class="input-wrap"><input id="loadAfter" type="number" min="1" max="20" step="0.5" value="2"><span>Ω</span></div></div></div>
+            <label class="slider-label" for="loadTime">Load change time <output id="loadTimeVal">20 s</output></label><input id="loadTime" type="range" min="0" max="60" step="1" value="20">
+          </div>
+          <div class="control-group compact-group">
+            <div class="group-title"><span>03</span><b>PI controller tuning</b></div>
+            <div class="two-inputs"><div><label for="kp">Proportional gain (Kp)</label><div class="input-wrap"><input id="kp" type="number" min="0.01" max="2" step="0.01" value="0.18"></div></div><div><label for="ki">Integral gain (Ki)</label><div class="input-wrap"><input id="ki" type="number" min="0" max="5" step="0.05" value="1.2"></div></div></div>
+          </div>
+          <div class="run-actions"><button class="button primary run-button" id="runBtn">▶ Start simulation</button><button class="button stop-button" id="stopBtn" disabled>■ Stop</button><button class="button reset-button" id="resetBtn">↺ Reset</button></div>
+          <p class="control-hint">The model runs locally in your browser. No Colab session or server is required.</p>
+        </aside>
+
+        <div class="results-area" id="results">
+          <div class="status-row"><div><span class="status-dot" id="statusDot"></span><span id="statusText">Waiting for simulation</span></div><span id="runDuration">—</span></div>
+          <div class="metric-grid">
+            <article class="metric-card"><span>OUTPUT VOLTAGE</span><strong id="metricVoltage">—<small>V</small></strong><p>Final simulated Vout</p></article>
+            <article class="metric-card"><span>VOLTAGE ERROR</span><strong id="metricError">—<small>V</small></strong><p>Mean absolute error · final 20%</p></article>
+            <article class="metric-card"><span>PV POWER</span><strong id="metricPv">—<small>W</small></strong><p>Final gross PV power</p></article>
+            <article class="metric-card"><span>LOAD POWER</span><strong id="metricLoad">—<small>W</small></strong><p>Final electrical load demand</p></article>
+          </div>
+          <div class="chart-grid">
+            <article class="chart-card wide-chart"><div class="chart-heading"><div><span>01 / TRACKING LOOP</span><h3>Solar panel position</h3></div><span class="chart-unit">Degrees (°)</span></div><div class="chart-wrap"><canvas id="trackingChart"></canvas></div></article>
+            <article class="chart-card"><div class="chart-heading"><div><span>02 / TRACKING ACCURACY</span><h3>Angle tracking error</h3></div><span class="chart-unit">Degrees (°)</span></div><div class="chart-wrap"><canvas id="errorChart"></canvas></div></article>
+            <article class="chart-card"><div class="chart-heading"><div><span>03 / ENVIRONMENT</span><h3>Solar irradiance</h3></div><span class="chart-unit">W/m²</span></div><div class="chart-wrap"><canvas id="irradianceChart"></canvas></div></article>
+            <article class="chart-card"><div class="chart-heading"><div><span>04 / POWER BALANCE</span><h3>PV power vs load power</h3></div><span class="chart-unit">Watts (W)</span></div><div class="chart-wrap"><canvas id="powerChart"></canvas></div></article>
+            <article class="chart-card wide-chart"><div class="chart-heading"><div><span>05 / VOLTAGE CONTROL</span><h3>Output voltage regulation</h3></div><span class="chart-unit">Volts (V)</span></div><div class="chart-wrap"><canvas id="voltageChart"></canvas></div></article>
+            <article class="chart-card"><div class="chart-heading"><div><span>06 / CONVERTER CONTROL</span><h3>Buck duty cycle</h3></div><span class="chart-unit">Duty ratio</span></div><div class="chart-wrap"><canvas id="dutyChart"></canvas></div></article>
+          </div>
+          <div class="export-row"><div><b>Simulation data</b><p>Download all calculated samples for further analysis.</p></div><button class="button export-button" id="csvBtn" disabled>↓ Export CSV</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="experiments">
+      <div class="section-heading"><div><p class="eyebrow">GUIDED EXPERIMENTS</p><h2>Try a test scenario</h2></div><p class="section-note">Load preset conditions, then start the simulation.</p></div>
+      <div class="preset-grid">
+        <button class="preset-card" data-preset="tracking"><span>TEST 01</span><b>Solar tracking test</b><p>Move the sun angle from 10° to 80° with no cloud disturbance.</p><i>Load scenario ↗</i></button>
+        <button class="preset-card" data-preset="cloud"><span>TEST 02</span><b>Cloud disturbance</b><p>Apply a 60% irradiance drop at 12 seconds.</p><i>Load scenario ↗</i></button>
+        <button class="preset-card" data-preset="load"><span>TEST 03</span><b>Load variation</b><p>Change the electrical load from 3 Ω to 2 Ω at 15 seconds.</p><i>Load scenario ↗</i></button>
+        <button class="preset-card featured-preset" data-preset="integrated"><span>TEST 04 · INTEGRATED</span><b>Full system test</b><p>Combine sun movement, cloud cover, and load variation.</p><i>Load scenario ↗</i></button>
+      </div>
+    </section>
+
+    <section class="notes-section" id="about">
+      <div class="section-heading"><div><p class="eyebrow">ENGINEERING NOTES</p><h2>How the model works</h2></div></div>
+      <div class="notes-grid">
+        <article><span>01</span><h3>Solar tracking</h3><p>The reference sun angle is compared with the measured panel angle. A proportional tracking controller commands the motor to reduce the angle error.</p><code>eθ = θref − θpanel</code></article>
+        <article><span>02</span><h3>PV generation</h3><p>Effective irradiance depends on cloud cover and the angle between the sun and the panel. PV power is estimated from rated power and effective irradiance.</p><code>Geff = G × max(cos(Δθ), 0)</code></article>
+        <article><span>03</span><h3>Voltage stabilization</h3><p>A PI controller compares output voltage with its reference and adjusts the Buck converter duty ratio to regulate the DC output.</p><code>eV = Vref − Vout</code></article>
+        <article><span>04</span><h3>Feedback signals</h3><p>Panel position and output voltage are measured and returned to their respective summing junctions, forming two closed-loop control systems.</p><code>Feedback control</code></article>
+      </div>
+      <div class="model-warning"><b>Model scope & limitations</b><p>This is an educational averaged model, not a hardware-validated design. The PV array is represented by a simplified power estimate at nominal PV voltage; it does not include a detailed single-diode I–V model or MPPT. The Buck converter is averaged (not individual MOSFET switching). A Buck converter can only step voltage down, so the reference voltage should remain below the PV nominal voltage (18 V). Motor and gate drivers are represented functionally.</p></div>
+    </section>
+  </main>
+  <footer><div class="brand"><span class="brand-mark">☼</span><span>SMART<span class="brand-light">SOLAR</span></span></div><p>Educational Control Systems Simulation · Runs in your browser</p><span>© 2026</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
