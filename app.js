@@ -12,7 +12,12 @@ function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function updateLabels(){const labels={duration:v=>v+' s',irradiance:v=>v+' W/m²',cloudTime:v=>v+' s',cloudDrop:v=>v+'%',vref:v=>v+' V',loadTime:v=>v+' s'};for(const [id,fn] of Object.entries(labels))$(id+'Val').textContent=fn($(id).value);}
 function setInputs(p){for(const [k,v] of Object.entries(p))if($(k))$(k).value=v;updateLabels();}
 async function simulate(p){
- const dt=.005,n=Math.floor(p.duration/dt)+1;const L=.01,C=.001,rL=.15,VpvNom=18,PpvRated=100,motorPower=2,eff=.90;
+
+ const dt = 0.0005;
+ const n = Math.floor(p.duration / dt) + 1;
+ const L = 0.01, C = 0.001, rL = 0.15,
+       VpvNom = 18, PpvRated = 100,
+       motorPower = 2, eff = 0.90;
  let theta=p.sunStart,thetaDot=0,iL=0,vout=0,integral=0;const kp=p.kp,ki=p.ki;const rows=[];
  for(let k=0;k<n;k++){
   if(!running)return rows;
