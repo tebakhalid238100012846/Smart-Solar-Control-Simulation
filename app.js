@@ -29,8 +29,14 @@ async function simulate(p){
   const requestedInputPower=Math.max(0,(duty*VpvNom)*Math.max(iL,0));const maxInputPower=pvNet;
   let sourceScale=1;if(requestedInputPower>maxInputPower&&requestedInputPower>0)sourceScale=clamp(maxInputPower/requestedInputPower,0,1);
   const vsrc=VpvNom*sourceScale;
-  const di=(duty*vsrc-vout-rL*iL)/L;const dv=(iL-vout/R)/C;
-  iL=Math.max(0,iL+di*dt);vout=clamp(vout+dv*dt,0,30);
+  // Semi-implicit Euler integration for the LC converter
+const di = (duty * vsrc - vout - rL * iL) / L;
+
+iL = Math.max(0, iL + di * dt);
+
+const dv = (iL - vout / R) / C;
+
+vout = clamp(vout + dv * dt, 0, 30);
   // Conditional integration anti-windup: do not integrate farther into saturation.
   const saturated=(raw!==duty);if(!saturated||((raw>0.95&&err<0)||(raw<0.05&&err>0)))integral=clamp(integral+err*dt,-20,20);
   const actualLoadPower=vout*vout/R;const pvOutCapacity=pvNet*eff;
