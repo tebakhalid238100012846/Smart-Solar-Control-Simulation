@@ -68,10 +68,7 @@
             <div class="two-inputs"><div><label for="loadBefore">Initial load</label><div class="input-wrap"><input id="loadBefore" type="number" min="1" max="20" step="0.5" value="3"><span>Ω</span></div></div><div><label for="loadAfter">Changed load</label><div class="input-wrap"><input id="loadAfter" type="number" min="1" max="20" step="0.5" value="2"><span>Ω</span></div></div></div>
             <label class="slider-label" for="loadTime">Load change time <output id="loadTimeVal">20 s</output></label><input id="loadTime" type="range" min="0" max="60" step="1" value="20">
           </div>
-          <div class="control-group compact-group">
-            <div class="group-title"><span>03</span><b>PI controller tuning</b></div>
-            <div class="two-inputs"><div><label for="kp">Proportional gain (Kp)</label><div class="input-wrap"><input id="kp" type="number" min="0.01" max="2" step="0.01" value="0.18"></div></div><div><label for="ki">Integral gain (Ki)</label><div class="input-wrap"><input id="ki" type="number" min="0" max="5" step="0.05" value="1.2"></div></div></div>
-          </div>
+         
           <div class="run-actions"><button class="button primary run-button" id="runBtn">▶ Start simulation</button><button class="button stop-button" id="stopBtn" disabled>■ Stop</button><button class="button reset-button" id="resetBtn">↺ Reset</button></div>
           <p class="control-hint">The model runs locally in your browser. No Colab session or server is required.</p>
         </aside>
@@ -90,7 +87,6 @@
             <article class="chart-card"><div class="chart-heading"><div><span>03 / ENVIRONMENT</span><h3>Solar irradiance</h3></div><span class="chart-unit">W/m²</span></div><div class="chart-wrap"><canvas id="irradianceChart"></canvas></div></article>
             <article class="chart-card"><div class="chart-heading"><div><span>04 / POWER BALANCE</span><h3>PV power vs load power</h3></div><span class="chart-unit">Watts (W)</span></div><div class="chart-wrap"><canvas id="powerChart"></canvas></div></article>
             <article class="chart-card wide-chart"><div class="chart-heading"><div><span>05 / VOLTAGE CONTROL</span><h3>Output voltage regulation</h3></div><span class="chart-unit">Volts (V)</span></div><div class="chart-wrap"><canvas id="voltageChart"></canvas></div></article>
-            <article class="chart-card"><div class="chart-heading"><div><span>06 / CONVERTER CONTROL</span><h3>Buck duty cycle</h3></div><span class="chart-unit">Duty ratio</span></div><div class="chart-wrap"><canvas id="dutyChart"></canvas></div></article>
           </div>
           <div class="export-row"><div><b>Simulation data</b><p>Download all calculated samples for further analysis.</p></div><button class="button export-button" id="csvBtn" disabled>↓ Export CSV</button></div>
         </div>
